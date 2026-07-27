@@ -196,6 +196,8 @@ ifeq ($(MESENOS),osx)
 	endif
 endif
 
+.PHONY: all ui core pgohelper pgo run clean
+
 all: ui
 
 ui: InteropDLL/$(OBJFOLDER)/$(SHAREDLIB)
@@ -206,6 +208,12 @@ ui: InteropDLL/$(OBJFOLDER)/$(SHAREDLIB)
 	#Don't run with AOT flags the first time to reduce build duration
 	cd UI && dotnet publish -c $(BUILD_TYPE) $(OPTIMIZEUI) -r $(MESENPLATFORM)
 	cd UI && dotnet publish -c $(BUILD_TYPE) $(OPTIMIZEUI) $(PUBLISHFLAGS)
+ifeq ($(MESENOS),osx)
+	# The self-contained publish leaves an app-local host in the shared output folder,
+	# which prevents Rider's framework-dependent launch from using the system .NET runtime.
+	rm -f $(OUTFOLDER)/libhostfxr.dylib
+	ln -sfn $(SHAREDLIB) $(OUTFOLDER)/MesenCore.dll.dylib
+endif
 
 core: InteropDLL/$(OBJFOLDER)/$(SHAREDLIB)
 
