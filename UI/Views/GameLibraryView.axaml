@@ -11,32 +11,33 @@
 	d:DesignHeight="500"
 	x:Class="Mesen.Views.GameLibraryView"
 	x:DataType="vm:GameLibraryViewModel"
-	Background="#181818"
+	Background="{DynamicResource ThemeBackgroundBrush}"
+	Foreground="{DynamicResource ThemeForegroundBrush}"
 >
 	<Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="16">
 		<Grid ColumnDefinitions="*,Auto,Auto" Margin="0 0 0 10">
 			<StackPanel>
-				<TextBlock Text="{l:Translate lblGameLibrary}" FontSize="22" FontWeight="SemiBold" Foreground="White" />
-				<TextBlock Text="{l:Translate lblGameLibraryDescription}" Foreground="LightGray" TextWrapping="Wrap" />
+				<TextBlock Text="{l:Translate lblGameLibrary}" FontSize="22" FontWeight="SemiBold" />
+				<TextBlock Text="{l:Translate lblGameLibraryDescription}" Opacity="0.72" TextWrapping="Wrap" />
 			</StackPanel>
 			<Button Grid.Column="1" Content="{l:Translate btnRefresh}" Click="BtnRefresh_OnClick" Margin="8 0 0 0" />
 			<Button Grid.Column="2" Content="{l:Translate btnAddFolder}" Click="BtnAddFolder_OnClick" Margin="8 0 0 0" />
 		</Grid>
 
-		<Border Grid.Row="1" BorderBrush="#444" BorderThickness="1" CornerRadius="3" Padding="8" Margin="0 0 0 10">
+		<Border Grid.Row="1" BorderBrush="{DynamicResource MesenGrayBorderColor}" BorderThickness="1" CornerRadius="3" Padding="8" Margin="0 0 0 10">
 			<StackPanel>
 				<CheckBox
 					Content="{l:Translate chkRecursiveForNewFolder}"
 					IsChecked="{Binding RecursiveForNewFolder}"
 					Margin="0 0 0 5"
 				/>
-				<TextBlock Text="{l:Translate lblNoGameFolders}" Foreground="LightGray" IsVisible="{Binding !HasFolders}" />
+				<TextBlock Text="{l:Translate lblNoGameFolders}" Opacity="0.72" IsVisible="{Binding !HasFolders}" />
 				<ScrollViewer MaxHeight="100">
 					<ItemsControl ItemsSource="{Binding Folders}">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate x:DataType="cfg:GameLibraryFolder">
 								<Grid ColumnDefinitions="*,Auto,Auto" Margin="0 2">
-									<TextBlock Text="{Binding Path}" Foreground="White" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+									<TextBlock Text="{Binding Path}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
 									<CheckBox
 										Grid.Column="1"
 										Content="{l:Translate chkIncludeSubfolders}"
@@ -65,6 +66,8 @@
 			Name="GameList"
 			ItemsSource="{Binding GameEntries}"
 			DoubleTapped="GameList_OnDoubleTapped"
+			Background="{DynamicResource ThemeBackgroundBrush}"
+			Foreground="{DynamicResource ThemeForegroundBrush}"
 		>
 			<ListBox.Styles>
 				<Style Selector="ListBoxItem">
@@ -78,8 +81,8 @@
 							<TextBlock Text="{Binding Format}" Foreground="#8ED8FF" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
 						</Border>
 						<StackPanel Grid.Column="1" Margin="10 0" VerticalAlignment="Center">
-							<TextBlock Text="{Binding Name}" Foreground="White" FontSize="15" TextTrimming="CharacterEllipsis" />
-							<TextBlock Text="{Binding Location}" Foreground="LightGray" TextTrimming="CharacterEllipsis" />
+							<TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+							<TextBlock Text="{Binding Location}" Opacity="0.68" TextTrimming="CharacterEllipsis" />
 						</StackPanel>
 						<Button Grid.Column="2" Content="{l:Translate btnPlay}" Click="BtnPlay_OnClick" VerticalAlignment="Center" MinWidth="70" />
 					</Grid>
@@ -88,7 +91,7 @@
 		</ListBox>
 
 		<Grid Grid.Row="4" ColumnDefinitions="*,Auto" Margin="0 10 0 0">
-			<TextBlock Text="{Binding StatusText}" Foreground="LightGray" VerticalAlignment="Center" />
+			<TextBlock Text="{Binding StatusText}" Opacity="0.72" VerticalAlignment="Center" />
 			<ProgressBar Grid.Column="1" IsIndeterminate="True" IsVisible="{Binding IsScanning}" Width="120" />
 		</Grid>
 	</Grid>

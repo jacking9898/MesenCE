@@ -1,16 +1,16 @@
 using Mesen.Config;
-using Mesen.GUI.Utilities;
 using Mesen.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace Mesen.Utilities
 {
 	public static class GameLibraryScanner
 	{
-		private static readonly HashSet<string> _nesExtensions = new(StringComparer.OrdinalIgnoreCase) {
+		private static readonly HashSet<string> NesExtensions = new(StringComparer.OrdinalIgnoreCase) {
 			".nes", ".fds", ".qd", ".unif", ".unf", ".nsf", ".nsfe", ".studybox"
 		};
 
@@ -35,25 +35,18 @@ namespace Mesen.Utilities
 						AttributesToSkip = FileAttributes.ReparsePoint
 					};
 
-					foreach(string file in Directory.EnumerateFiles(folder.Path, "*", options)) {
+					// Materialize the list before extracting archives so newly created files do not
+					// change the directory enumeration while it is in progress.
+					foreach(string file in Directory.EnumerateFiles(folder.Path, "*", options).ToList()) {
 						cancellationToken.ThrowIfCancellationRequested();
 						string extension = System.IO.Path.GetExtension(file);
-						if(_nesExtensions.Contains(extension)) {
+						if(NesExtensions.Contains(extension)) {
 							AddEntry(entries, knownPaths, new ResourcePath() { Path = file }, folder.Path);
 						} else if(extension.Equals(".zip", StringComparison.OrdinalIgnoreCase)) {
 							try {
-								List<ArchiveRomEntry> archiveEntries = ArchiveHelper.GetArchiveRomList(file);
-								for(int i = 0; i < archiveEntries.Count; i++) {
+								foreach(string extractedRom in GameLibraryArchiveExtractor.ExtractRoms(file, NesExtensions, cancellationToken)) {
 									cancellationToken.ThrowIfCancellationRequested();
-									ArchiveRomEntry archiveEntry = archiveEntries[i];
-									if(_nesExtensions.Contains(System.IO.Path.GetExtension(archiveEntry.Filename))) {
-										ResourcePath path = new() {
-											Path = file,
-											InnerFile = archiveEntry.Filename,
-											InnerFileIndex = archiveEntry.IsUtf8 ? 0 : i + 1
-										};
-										AddEntry(entries, knownPaths, path, folder.Path);
-									}
+									AddEntry(entries, knownPaths, new ResourcePath() { Path = extractedRom }, folder.Path);
 								}
 							} catch(OperationCanceledException) {
 								throw;

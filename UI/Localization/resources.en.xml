@@ -3,7 +3,7 @@
 	<Forms>
 		<Form ID="GameLibraryView">
 			<Control ID="lblGameLibrary">NES Game Library</Control>
-			<Control ID="lblGameLibraryDescription">Choose folders to scan for supported NES and Famicom files, including games stored in ZIP archives.</Control>
+			<Control ID="lblGameLibraryDescription">Choose folders to scan for supported NES and Famicom files. Games in ZIP archives are extracted to same-named folders before loading.</Control>
 			<Control ID="btnRefresh">Refresh</Control>
 			<Control ID="btnAddFolder">Add Folder</Control>
 			<Control ID="chkRecursiveForNewFolder">Include subfolders when adding the next folder</Control>
