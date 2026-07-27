@@ -14,11 +14,11 @@ and therefore does not comply with the upstream [`CONTRIBUTING.md`](CONTRIBUTING
 prohibits AI-generated code. These changes will not be submitted to the upstream project as a
 contribution or pull request.
 
-The maintainer created and maintains this fork solely for personal study and use. The maintainer
-does not use it to publish releases, distribute game ROMs, or for any other purpose. This statement
-describes the maintainer's intent and does not restrict any rights granted by GPLv3. This repository
-does not contain copyrighted game ROMs, and all source code remains available under the
-[GPLv3 license](LICENSE).
+The maintainer created and maintains this fork for personal study and use and does not use it to
+publish releases or distribute game ROMs. This describes only the maintainer's own purpose; it does
+not restrict anyone else's use of the repository. This repository remains open source, and anyone
+may use, modify, and redistribute it under the [GPLv3 license](LICENSE). This notice imposes no
+additional restrictions beyond GPLv3. This repository does not contain copyrighted game ROMs.
 
 ## Releases
 
