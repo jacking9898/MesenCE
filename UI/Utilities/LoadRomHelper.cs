@@ -45,7 +45,7 @@ namespace Mesen.Utilities
 		private static void InternalLoadRom(ResourcePath romPath, ResourcePath? patchPath)
 		{
 			//Temporarily hide selection screen to allow displaying error messages
-			MainWindowViewModel.Instance.RecentGames.Visible = false;
+			MainWindowViewModel.Instance.HideSelectionScreens();
 
 			Task.Run(() => {
 				//Run in another thread to prevent deadlocks etc. when emulator notifications are processed UI-side
@@ -60,7 +60,7 @@ namespace Mesen.Utilities
 		public static void LoadRecentGame(string filename, bool forceLoadState)
 		{
 			//Temporarily hide selection screen to allow displaying error messages
-			MainWindowViewModel.Instance.RecentGames.Visible = false;
+			MainWindowViewModel.Instance.HideSelectionScreens();
 
 			Task.Run(() => {
 				//Run in another thread to prevent deadlocks etc. when emulator notifications are processed UI-side
@@ -73,15 +73,13 @@ namespace Mesen.Utilities
 
 		private static void ShowSelectionOnScreenAfterError()
 		{
-			if(ConfigManager.Config.Preferences.GameSelectionScreenMode != GameSelectionMode.Disabled) {
-				Thread.Sleep(3100);
-				if(!EmuApi.IsRunning()) {
-					//No game was loaded, show game selection screen again after ~3 seconds
-					//This allows error messages to be visible to the user
-					Dispatcher.UIThread.Post(() => {
-						MainWindowViewModel.Instance.RecentGames.Visible = true;
-					});
-				}
+			Thread.Sleep(3100);
+			if(!EmuApi.IsRunning()) {
+				//No game was loaded, show game library again after ~3 seconds
+				//This allows error messages to be visible to the user
+				Dispatcher.UIThread.Post(() => {
+					MainWindowViewModel.Instance.ShowGameLibrary();
+				});
 			}
 		}
 

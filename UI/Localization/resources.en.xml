@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Resources>
 	<Forms>
+		<Form ID="GameLibraryView">
+			<Control ID="lblGameLibrary">NES Game Library</Control>
+			<Control ID="lblGameLibraryDescription">Choose folders to scan for supported NES and Famicom files, including games stored in ZIP archives.</Control>
+			<Control ID="btnRefresh">Refresh</Control>
+			<Control ID="btnAddFolder">Add Folder</Control>
+			<Control ID="chkRecursiveForNewFolder">Include subfolders when adding the next folder</Control>
+			<Control ID="lblNoGameFolders">No game folders have been added.</Control>
+			<Control ID="chkIncludeSubfolders">Include subfolders</Control>
+			<Control ID="btnRemove">Remove</Control>
+			<Control ID="lblSearchGames">Search games</Control>
+			<Control ID="btnPlay">Play</Control>
+		</Form>
 		<Form ID="MainMenuView">
 			<Control ID="mnuFile">_File</Control>
 			<Control ID="mnuGame">_Game</Control>
@@ -1762,6 +1774,11 @@
 		</Form>
 	</Forms>
 	<Messages>
+		<Message ID="GameLibraryAddFolderHint">Add a folder to find NES games.</Message>
+		<Message ID="GameLibraryScanning">Scanning game folders...</Message>
+		<Message ID="GameLibraryScanComplete">{0} game(s) found.</Message>
+		<Message ID="GameLibraryScanCompleteWithErrors">{0} game(s) found; {1} item(s) could not be read.</Message>
+		<Message ID="GameLibraryScanFailed">The game library could not be scanned: {0}</Message>
 		<Message ID="LastSession">Last Session</Message>
 		<Message ID="AutoSave">Auto-save</Message>
 		<Message ID="SlotNumber">Slot #{0}</Message>

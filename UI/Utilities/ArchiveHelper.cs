@@ -1,15 +1,25 @@
 ﻿using Mesen.Interop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Mesen.GUI.Utilities
 {
 	public class ArchiveHelper
 	{
+		private static readonly Encoding _gb18030Encoding;
+
+		static ArchiveHelper()
+		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+			_gb18030Encoding = Encoding.GetEncoding("GB18030", EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
+		}
+
 		public unsafe static List<ArchiveRomEntry> GetArchiveRomList(string archivePath)
 		{
 			//Split the array on the [!|!] delimiter
@@ -41,8 +51,7 @@ namespace Mesen.GUI.Utilities
 
 			List<ArchiveRomEntry> entries = new List<ArchiveRomEntry>();
 
-			//Check whether or not each string is a valid utf8 filename, if not decode it using the system's default encoding.
-			//This is necessary because zip files do not have any rules when it comes to encoding filenames
+			// ZIP entry names may be UTF-8 or an unmarked legacy encoding.
 			for(int i = 0; i < filenames.Count; i++) {
 				byte[] originalBytes = filenames[i].ToArray();
 				string utf8Filename = Encoding.UTF8.GetString(originalBytes);
@@ -59,15 +68,59 @@ namespace Mesen.GUI.Utilities
 					equal = false;
 				}
 
-				if(!equal) {
-					//String doesn't appear to be an utf8 string, use the system's default encoding
-					entries.Add(new ArchiveRomEntry() { Filename = Encoding.Default.GetString(originalBytes), IsUtf8 = false });
+				string? legacyFilename = DecodeLegacyFilename(originalBytes);
+				if(!equal || (legacyFilename != null && ShouldPreferLegacyFilename(archivePath, utf8Filename, legacyFilename))) {
+					entries.Add(new ArchiveRomEntry() { Filename = legacyFilename ?? Encoding.Default.GetString(originalBytes), IsUtf8 = false });
 				} else {
 					entries.Add(new ArchiveRomEntry() { Filename = utf8Filename, IsUtf8 = true });
 				}
 			}
 
 			return entries;
+		}
+
+		private static string? DecodeLegacyFilename(byte[] originalBytes)
+		{
+			// A large number of older Chinese ROM archives store entry names as GBK/GB18030
+			// without setting ZIP's UTF-8 flag. Encoding.Default is UTF-8 on macOS and Linux,
+			// so it would replace those bytes with mojibake even though the ROM remains usable.
+			try {
+				return _gb18030Encoding.GetString(originalBytes);
+			} catch(DecoderFallbackException) {
+				return null;
+			}
+		}
+
+		private static bool ShouldPreferLegacyFilename(string archivePath, string utf8Filename, string legacyFilename)
+		{
+			string archiveName = Path.GetFileNameWithoutExtension(archivePath);
+			string utf8Name = Path.GetFileNameWithoutExtension(utf8Filename);
+			string legacyName = Path.GetFileNameWithoutExtension(legacyFilename);
+
+			if(string.Equals(archiveName, utf8Name, StringComparison.OrdinalIgnoreCase)) {
+				return false;
+			}
+			if(string.Equals(archiveName, legacyName, StringComparison.OrdinalIgnoreCase)) {
+				return true;
+			}
+
+			return GetFilenameQuality(legacyName) > GetFilenameQuality(utf8Name);
+		}
+
+		private static int GetFilenameQuality(string filename)
+		{
+			int score = 0;
+			foreach(char chr in filename) {
+				UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(chr);
+				if(chr >= '\u3400' && chr <= '\u9FFF' || chr >= '\u3040' && chr <= '\u30FF' || chr >= '\uAC00' && chr <= '\uD7AF') {
+					score += 2;
+				} else if(chr == '\uFFFD' || category == UnicodeCategory.Control || category == UnicodeCategory.PrivateUse) {
+					score -= 10;
+				} else if(category == UnicodeCategory.ModifierLetter || category == UnicodeCategory.ModifierSymbol || category == UnicodeCategory.NonSpacingMark) {
+					score -= 2;
+				}
+			}
+			return score;
 		}
 	}
 

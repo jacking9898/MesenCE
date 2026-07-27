@@ -4,6 +4,13 @@ Mesen is a multi-system emulator for Windows, Linux, and macOS. It supports NES,
 
 This is a community-managed fork, created to maintain and expand this emulator into the future.
 
+## Personal Fork Notice
+
+This repository is a personal, unofficial fork and is not an upstream MesenCE release.
+Changes added in July 2026 include a configurable NES game library, recursive folder scanning,
+ZIP archive discovery, and legacy Chinese ZIP filename decoding. No copyrighted game ROMs are
+included in this repository. The project remains licensed under GPLv3; see [LICENSE](LICENSE).
+
 ## Releases
 
 The latest stable version is available from the [releases page on GitHub](https://github.com/nesdev-org/MesenCE/releases).

@@ -345,7 +345,7 @@ namespace Mesen.Windows
 					GameLoadedEventParams evtParams = Marshal.PtrToStructure<GameLoadedEventParams>(e.Parameter);
 					if(!evtParams.IsPowerCycle) {
 						Dispatcher.UIThread.Post(() => {
-							_model.RecentGames.Visible = false;
+							_model.HideSelectionScreens();
 							if(IsKeyboardFocusWithin || IsActive || ApplicationHelper.GetActiveOrMainWindow() == this) {
 								this.GetControl<Panel>("RendererPanel").Focus();
 							}
@@ -380,7 +380,7 @@ namespace Mesen.Windows
 				case ConsoleNotificationType.DebuggerResumed:
 				case ConsoleNotificationType.GameResumed:
 					Dispatcher.UIThread.Post(() => {
-						_model.RecentGames.Visible = false;
+						_model.HideSelectionScreens();
 						if(IsKeyboardFocusWithin) {
 							this.GetControl<Panel>("RendererPanel").Focus();
 						}
@@ -396,7 +396,7 @@ namespace Mesen.Windows
 				case ConsoleNotificationType.EmulationStopped:
 					Dispatcher.UIThread.Post(() => {
 						_model.RomInfo = new RomInfo();
-						_model.RecentGames.Init(GameScreenMode.RecentGames);
+						_model.ShowGameLibrary();
 					});
 					break;
 
@@ -812,7 +812,7 @@ namespace Mesen.Windows
 				}
 			} else if(_needResume) {
 				//Don't resume if the load/save state dialog is opened
-				if(!_model.RecentGames.Visible) {
+				if(!_model.IsSelectionScreenVisible) {
 					EmuApi.Resume();
 					_needResume = false;
 				}

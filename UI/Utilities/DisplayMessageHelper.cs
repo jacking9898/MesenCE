@@ -17,11 +17,11 @@ public class DisplayMessageHelper
 
 	public static void DisplayMessage(string title, string message, string? param1 = null)
 	{
-		if(EmuApi.IsRunning() || ConfigManager.Config.Preferences.GameSelectionScreenMode == GameSelectionMode.Disabled) {
+		if(EmuApi.IsRunning()) {
 			EmuApi.DisplayMessage(title, message, param1);
 		} else {
 			//Temporarily hide selection screen to allow displaying messages
-			MainWindowViewModel.Instance.RecentGames.Visible = false;
+			MainWindowViewModel.Instance.HideSelectionScreens();
 
 			EmuApi.DisplayMessage(title, message, param1);
 
@@ -35,7 +35,7 @@ public class DisplayMessageHelper
 				//This allows the message to be visible to the user
 				Dispatcher.UIThread.Post(() => {
 					if(_taskId == counter && !EmuApi.IsRunning()) {
-						MainWindowViewModel.Instance.RecentGames.Visible = true;
+						MainWindowViewModel.Instance.ShowGameLibrary();
 					}
 				});
 			});

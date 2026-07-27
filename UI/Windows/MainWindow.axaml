@@ -28,6 +28,9 @@
 		<DataTemplate DataType="{x:Type vm:RecentGamesViewModel}">
 			<c:StateGrid IsVisible="{Binding Visible}" Entries="{Binding GameEntries}" Title="{Binding Title}" Mode="{Binding Mode}" />
 		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:GameLibraryViewModel}">
+			<v:GameLibraryView />
+		</DataTemplate>
 	</Window.DataTemplates>
 	
 	<DockPanel>
@@ -40,6 +43,7 @@
 		<ContentControl Name="AudioPlayer" DockPanel.Dock="Bottom" Content="{Binding AudioPlayer}" />
 
 		<Panel Name="RendererPanel" Background="Black" Focusable="True">
+			<ContentControl Background="#181818" Content="{Binding GameLibrary}" IsVisible="{Binding GameLibrary.Visible}" />
 			<ContentControl Background="#181818" Content="{Binding RecentGames}" IsVisible="{Binding RecentGames.Visible}" />
 
 			<ContentControl

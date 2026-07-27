@@ -57,13 +57,13 @@ namespace Mesen.Utilities
 		{
 			UpdateMainMenuVisibility();
 
-			if(MainWindowViewModel.Instance.RecentGames.Visible) {
+			if(MainWindowViewModel.Instance.IsSelectionScreenVisible) {
 				return;
 			}
 
 			SystemMouseState mouseState = InputApi.GetSystemMouseState(GetRendererHandle());
 
-			if((mouseState.LeftButton || _closeMenuPending) && _wnd.IsActive && !IsPointerInMenu() && (EmuApi.IsRunning() || !MainWindowViewModel.Instance.RecentGames.Visible)) {
+			if((mouseState.LeftButton || _closeMenuPending) && _wnd.IsActive && !IsPointerInMenu() && (EmuApi.IsRunning() || !MainWindowViewModel.Instance.IsSelectionScreenVisible)) {
 				if(_closeMenuPending && !mouseState.LeftButton) {
 					//Close menu when renderer is clicked, after the mouse button is released (while not in the menu)
 					_mainMenu.MainMenu.Close();

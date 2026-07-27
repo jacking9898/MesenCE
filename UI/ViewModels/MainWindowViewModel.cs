@@ -24,6 +24,7 @@ namespace Mesen.ViewModels
 		[ObservableProperty] public partial RomInfo RomInfo { get; set; }
 		[ObservableProperty] public partial AudioPlayerViewModel? AudioPlayer { get; private set; }
 		[ObservableProperty] public partial RecentGamesViewModel RecentGames { get; private set; }
+		[ObservableProperty] public partial GameLibraryViewModel GameLibrary { get; private set; }
 
 		[ObservableProperty] public partial string WindowTitle { get; private set; } = "MesenCE";
 		[ObservableProperty] public partial Size RendererSize { get; set; }
@@ -37,6 +38,7 @@ namespace Mesen.ViewModels
 
 		public Configuration Config { get; }
 		public NativeRenderer? Renderer { get; internal set; }
+		public bool IsSelectionScreenVisible => RecentGames.Visible || GameLibrary.Visible;
 
 		public MainWindowViewModel()
 		{
@@ -46,6 +48,7 @@ namespace Mesen.ViewModels
 			MainMenu = new MainMenuViewModel(this);
 			RomInfo = new RomInfo();
 			RecentGames = new RecentGamesViewModel();
+			GameLibrary = new GameLibraryViewModel();
 
 			IsMenuVisible = !Config.Preferences.AutoHideMenu;
 		}
@@ -54,8 +57,13 @@ namespace Mesen.ViewModels
 		{
 			MainMenu.Initialize(wnd);
 			RecentGames.Init(GameScreenMode.RecentGames);
+			RecentGames.Visible = false;
+			GameLibrary.Initialize();
 
 			AddDisposable(RecentGames.ObserveProp(nameof(RecentGamesViewModel.Visible), () => {
+				UpdateRendererVisibility();
+			}));
+			AddDisposable(GameLibrary.ObserveProp(nameof(GameLibraryViewModel.Visible), () => {
 				UpdateRendererVisibility();
 			}));
 
@@ -74,14 +82,32 @@ namespace Mesen.ViewModels
 
 		private void UpdateRendererVisibility()
 		{
-			IsNativeRendererVisible = !RecentGames.Visible && SoftwareRenderer.FrameSurface == null;
-			IsSoftwareRendererVisible = !RecentGames.Visible && SoftwareRenderer.FrameSurface != null;
+			IsNativeRendererVisible = !IsSelectionScreenVisible && SoftwareRenderer.FrameSurface == null;
+			IsSoftwareRendererVisible = !IsSelectionScreenVisible && SoftwareRenderer.FrameSurface != null;
 
 			if(Renderer != null) {
 				Dispatcher.UIThread.Post(() => {
 					Renderer.IsVisible = IsNativeRendererVisible;
 				});
 			}
+		}
+
+		public void HideSelectionScreens()
+		{
+			RecentGames.Visible = false;
+			GameLibrary.Visible = false;
+		}
+
+		public void ShowGameLibrary()
+		{
+			RecentGames.Visible = false;
+			GameLibrary.Visible = true;
+		}
+
+		public void ShowRecentGames(GameScreenMode mode)
+		{
+			GameLibrary.Visible = false;
+			RecentGames.Init(mode);
 		}
 
 		partial void OnRomInfoChanged(RomInfo value)

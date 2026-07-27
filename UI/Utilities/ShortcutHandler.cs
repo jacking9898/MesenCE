@@ -111,14 +111,14 @@ namespace Mesen.Utilities
 					if(isFullscreen) {
 						_mainWindow.ToggleFullscreen();
 					}
-					MainWindowModel.RecentGames.Init(GameScreenMode.LoadState);
+					MainWindowModel.ShowRecentGames(GameScreenMode.LoadState);
 					break;
 
 				case EmulatorShortcut.SaveStateDialog:
 					if(isFullscreen) {
 						_mainWindow.ToggleFullscreen();
 					}
-					MainWindowModel.RecentGames.Init(GameScreenMode.SaveState);
+					MainWindowModel.ShowRecentGames(GameScreenMode.SaveState);
 					break;
 			}
 		}
