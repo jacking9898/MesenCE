@@ -181,6 +181,16 @@ namespace Mesen.Config
 			if(Application.Current != null) {
 				string mesenFont = Configuration.GetValidFontFamily(MesenFont.FontFamily, false);
 				string menuFont = Configuration.GetValidFontFamily(MesenMenuFont.FontFamily, false);
+				if(OperatingSystem.IsMacOS()) {
+					// Persist the replacement for the old macOS default so subsequent
+					// launches and the font settings UI show the font actually in use.
+					if(MesenFont.FontFamily == "Microsoft Sans Serif") {
+						MesenFont.FontFamily = mesenFont;
+					}
+					if(MesenMenuFont.FontFamily == "Microsoft Sans Serif") {
+						MesenMenuFont.FontFamily = menuFont;
+					}
+				}
 
 				if(Application.Current.Resources["MesenFont"] is FontFamily curMesenFont && curMesenFont.Name != mesenFont) {
 					Application.Current.Resources["MesenFont"] = new FontFamily(mesenFont);

@@ -197,10 +197,21 @@ namespace Mesen.Config
 			return defaultFont;
 		}
 
+		private static string GetDefaultMacFontFamily()
+		{
+			return FindMatchingFont("Hiragino Sans GB", "PingFang SC", "Hiragino Sans GB", "Arial Unicode MS", "Heiti SC");
+		}
+
 		public static string GetValidFontFamily(string requestedFont, bool preferMonoFont)
 		{
 			if(_installedFonts == null) {
 				InitInstalledFonts();
+			}
+
+			// Microsoft Sans Serif was previously used as the macOS default, but it
+			// does not contain the CJK glyphs required by localized text and ROM names.
+			if(OperatingSystem.IsMacOS() && requestedFont == "Microsoft Sans Serif") {
+				requestedFont = GetDefaultMacFontFamily();
 			}
 
 			if(_installedFonts.Contains(requestedFont)) {
@@ -223,7 +234,7 @@ namespace Mesen.Config
 			if(OperatingSystem.IsWindows()) {
 				return new FontConfig() { FontFamily = "Microsoft Sans Serif", FontSize = 11 };
 			} else if(OperatingSystem.IsMacOS()) {
-				return new FontConfig() { FontFamily = FindMatchingFont("Microsoft Sans Serif"), FontSize = 11 };
+				return new FontConfig() { FontFamily = GetDefaultMacFontFamily(), FontSize = 11 };
 			} else {
 				return new FontConfig() { FontFamily = FindMatchingFont("FreeSans", "DejaVu Sans", "Noto Sans"), FontSize = 11 };
 			}
@@ -234,7 +245,7 @@ namespace Mesen.Config
 			if(OperatingSystem.IsWindows()) {
 				return new FontConfig() { FontFamily = "Segoe UI", FontSize = 12 };
 			} else if(OperatingSystem.IsMacOS()) {
-				return new FontConfig() { FontFamily = FindMatchingFont("Microsoft Sans Serif"), FontSize = 12 };
+				return new FontConfig() { FontFamily = GetDefaultMacFontFamily(), FontSize = 12 };
 			} else {
 				return new FontConfig() { FontFamily = FindMatchingFont("FreeSans", "DejaVu Sans", "Noto Sans"), FontSize = 12 };
 			}
