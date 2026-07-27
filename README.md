@@ -4,17 +4,21 @@ Mesen is a multi-system emulator for Windows, Linux, and macOS. It supports NES,
 
 This is a community-managed fork, created to maintain and expand this emulator into the future.
 
-## 个人 Fork 说明 / Personal Fork Notice
+## Personal Fork Notice
 
-本仓库的 `master` 分支是为了实现维护者个人 UI 需求而保留的非官方 fork，并非上游
-MesenCE 的正式版本。相关改动包括可配置的 NES 游戏库、递归目录扫描、ZIP 游戏发现，
-以及旧编码中文 ZIP 文件名兼容。部分代码由 AI 辅助生成，因此不符合上游
-[`CONTRIBUTING.md`](CONTRIBUTING.md) 中禁止提交 AI 生成代码的贡献要求；这些改动不会
-作为贡献或 Pull Request 提交给上游项目。
+The `master` branch of this repository is an unofficial personal fork maintained to implement
+the maintainer's own UI requirements. It is not an official upstream MesenCE release. The changes
+include a configurable NES game library, recursive directory scanning, ZIP game discovery, and
+compatibility with legacy Chinese ZIP filename encodings. Some code was created with AI assistance
+and therefore does not comply with the upstream [`CONTRIBUTING.md`](CONTRIBUTING.md) policy that
+prohibits AI-generated code. These changes will not be submitted to the upstream project as a
+contribution or pull request.
 
-维护者创建和维护此 fork 仅用于个人学习和使用，不用于发布 Release、分发游戏 ROM
-或其他目的。本说明仅描述维护者的用途和发布意图，不限制 GPLv3 已授予他人的权利。
-仓库不包含任何受版权保护的游戏 ROM，所有源代码仍按 [GPLv3](LICENSE) 提供。
+The maintainer created and maintains this fork solely for personal study and use. The maintainer
+does not use it to publish releases, distribute game ROMs, or for any other purpose. This statement
+describes the maintainer's intent and does not restrict any rights granted by GPLv3. This repository
+does not contain copyrighted game ROMs, and all source code remains available under the
+[GPLv3 license](LICENSE).
 
 ## Releases
 
