@@ -56,9 +56,12 @@
 
 		<TextBox
 			Grid.Row="2"
+			Name="SearchBox"
 			Text="{Binding SearchText, Converter={StaticResource NullTextConverter}}"
 			PlaceholderText="{l:Translate lblSearchGames}"
 			Margin="0 0 0 10"
+			GotFocus="SearchBox_OnGotFocus"
+			LostFocus="SearchBox_OnLostFocus"
 		/>
 
 		<ListBox

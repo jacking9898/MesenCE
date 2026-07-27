@@ -66,6 +66,12 @@ MacOSKeyManager::MacOSKeyManager(Emulator* emu)
 			return event;
 		}
 
+		if(_disableAllKeys) {
+			//Allow focused UI controls to receive keyboard input while emulator
+			//input is disabled (e.g. the game library search box).
+			return event;
+		}
+
 		if([event type] == NSEventTypeKeyDown && ([event modifierFlags] & NSEventModifierFlagCommand) != 0) {
 			//Pass through command-based keydown events so cmd+Q etc still works
 			return event;

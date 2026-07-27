@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Mesen.Config;
+using Mesen.Interop;
 using Mesen.Utilities;
 using Mesen.ViewModels;
 using System;
@@ -31,6 +32,17 @@ namespace Mesen.Views
 			if(DataContext is GameLibraryViewModel model) {
 				_ = model.RefreshAsync();
 			}
+		}
+
+		private void SearchBox_OnGotFocus(object? sender, RoutedEventArgs e)
+		{
+			InputApi.DisableAllKeys(true);
+			InputApi.ResetKeyState();
+		}
+
+		private void SearchBox_OnLostFocus(object? sender, RoutedEventArgs e)
+		{
+			InputApi.DisableAllKeys(false);
 		}
 
 		private void BtnRemoveFolder_OnClick(object sender, RoutedEventArgs e)
